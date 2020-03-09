@@ -1,4 +1,4 @@
-package com.ipiecoles.java.java350;
+package com.ipiecoles.java.java350.model;
 
 import com.ipiecoles.java.java350.model.Employe;
 import org.assertj.core.api.Assertions;
