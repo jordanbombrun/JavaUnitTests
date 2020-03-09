@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+
 @SpringBootTest
 public class EmployeRepositoryTest {
 
@@ -30,12 +32,27 @@ public class EmployeRepositoryTest {
     public void testFindLastMatricule() {
         // given
         Employe emp = new Employe();
-        emp.setMatricule("M99999");
+        emp.setMatricule("M22222");
         employeRepository.save(emp);
         // when
         String result = employeRepository.findLastMatricule();
         // then
-        String empMatricule = emp.getMatricule().substring(1);
-        Assertions.assertThat(result).isEqualTo(empMatricule);
+        String lastMatricule = emp.getMatricule().substring(1);
+        Assertions.assertThat(result).isEqualTo(lastMatricule);
+    }
+
+    @Test
+    public void testFindLastMatricule2Employes() { //le plus grand nombre des matricules
+        // given
+        Employe emp1 = employeRepository.save(new Employe("Doe", "John", "M56789",
+                LocalDate.now(), 1500d, 1, 1.0));
+        Employe emp2 = employeRepository.save(new Employe("Doe", "Toto", "T01234",
+                LocalDate.now(), 1500d, 1, 1.0));
+
+        // when
+        String lastMatricule = employeRepository.findLastMatricule();
+
+        // then
+        Assertions.assertThat(lastMatricule).isEqualTo("56789");
     }
 }
