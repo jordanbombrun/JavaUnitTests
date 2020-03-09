@@ -16,6 +16,12 @@ public class EmployeRepositoryTest {
     EmployeRepository employeRepository;
 
     @Test
+    public void testFindNoMatricule() {
+        String lastMatricule = employeRepository.findLastMatricule();
+        Assertions.assertThat(lastMatricule).isNull();
+    }
+
+    @Test
     public void testFindByMatricule() {
         // given
         Employe emp = new Employe();
