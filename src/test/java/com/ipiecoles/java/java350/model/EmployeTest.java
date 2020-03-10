@@ -105,8 +105,8 @@ public class EmployeTest {
     @ParameterizedTest
     @CsvSource({
             "1500 ,-0.5, 1500",
-            "1500 , 2.0, 3000",
-            "1500 , 15.0, 15000"
+            "1500 , 1.0, 3000",
+            "1500 , 15.0, 16500"
     })
     public void testAugmenterSalaire(
             Double salaire,
