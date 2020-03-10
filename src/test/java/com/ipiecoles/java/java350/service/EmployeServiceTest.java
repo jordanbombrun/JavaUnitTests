@@ -79,4 +79,32 @@ public class EmployeServiceTest {
             Assertions.assertThat(e.getMessage()).isEqualTo("Limite des 100000 matricules atteinte !");
         }
     }
+
+    /**
+     * Cas 1 : le commercial retombe à la performance de base ( +1 pour performance moyenne )
+     */
+    @Test
+    public void testCalculPerformanceCommercialCas1() {
+        // given
+        Employe emp = new Employe();
+        emp.setMatricule("C00001");
+        emp.setPerformance(10);
+        Mockito.when(employeRepository.findByMatricule("C00001")).thenReturn(emp);
+        String matricule = "C00001";
+        Long caTraite = 100000L;
+        Long objectifCa = 200000L;
+
+        // when
+        try {
+            employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
+        } catch (EmployeException e) {
+            System.out.println("########### ERREUR ###########");
+        }
+
+        // then
+        ArgumentCaptor<Employe> employeArgumentCaptor = ArgumentCaptor.forClass(Employe.class);
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeArgumentCaptor.capture());
+        Employe employe = employeArgumentCaptor.getValue();
+        Assertions.assertThat(employe.getPerformance()).isEqualTo(Entreprise.PERFORMANCE_BASE+1);
+    }
 }
