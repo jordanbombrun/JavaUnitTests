@@ -68,6 +68,20 @@ public class EmployeRepositoryTest {
         Assertions.assertThat(lastMatricule).isEqualTo("56789");
     }
 
+    /**
+     * Test d'intégration de la moyenne de 0 commericaux
+     */
+    @Test
+    public void testAvgPerformanceWhereMatriculeStartsWithNoCommercial() {
+        // given when then
+        Assertions.assertThat(
+                employeRepository.avgPerformanceWhereMatriculeStartsWith("C")
+        ).isNull();
+    }
+
+    /**
+     * Test d'intégration de la moyenne de 2 techniciens
+     */
     @Test
     public void testAvgPerformanceWhereMatriculeStartsWith2Techniciens() {
         // given
@@ -85,6 +99,24 @@ public class EmployeRepositoryTest {
 
         // then
         Assertions.assertThat(moyenne).isEqualTo(15);
+    }
+
+    /**
+     * Test d'intégration de la moyenne de 1 manager
+     */
+    @Test
+    public void testAvgPerformanceWhereMatriculeStartsWith1Manager() {
+        // given
+        Employe man = new Employe();
+        man.setMatricule("M00001");
+        man.setPerformance(10);
+        employeRepository.save(man);
+
+        // when
+        Double moyenne = employeRepository.avgPerformanceWhereMatriculeStartsWith("M");
+
+        // then
+        Assertions.assertThat(moyenne).isEqualTo(Double.valueOf(man.getPerformance()));
     }
 
 
