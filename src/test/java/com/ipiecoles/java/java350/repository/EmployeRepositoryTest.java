@@ -68,5 +68,24 @@ public class EmployeRepositoryTest {
         Assertions.assertThat(lastMatricule).isEqualTo("56789");
     }
 
+    @Test
+    public void testAvgPerformanceWhereMatriculeStartsWith2Techniciens() {
+        // given
+        Employe tech1 = new Employe();
+        Employe tech2 = new Employe();
+        tech1.setMatricule("T00001");
+        tech2.setMatricule("T00002");
+        tech1.setPerformance(10);
+        tech2.setPerformance(20);
+        employeRepository.save(tech1);
+        employeRepository.save(tech2);
+
+        // when
+        Double moyenne = employeRepository.avgPerformanceWhereMatriculeStartsWith("T");
+
+        // then
+        Assertions.assertThat(moyenne).isEqualTo(15);
+    }
+
 
 }
