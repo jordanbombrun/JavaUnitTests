@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Array;
 import java.time.LocalDate;
 
 @SpringBootTest
@@ -69,7 +70,7 @@ public class EmployeRepositoryTest {
     }
 
     /**
-     * Test d'intégration de la moyenne de 0 commericaux
+     * Test d'intégration de la moyenne de 0 commercial
      */
     @Test
     public void testAvgPerformanceWhereMatriculeStartsWithNoCommercial() {
@@ -77,6 +78,27 @@ public class EmployeRepositoryTest {
         Assertions.assertThat(
                 employeRepository.avgPerformanceWhereMatriculeStartsWith("C")
         ).isNull();
+    }
+
+    /**
+     * Test d'intégration de la moyenne de 3 commerciaux
+     */
+    @Test
+    public void testAvgPerformanceWhereMatriculeStartsWith3Commerciaux() {
+        // given
+        Employe[] comTab = new Employe[3];
+        for (int i = 0; i < 3; i++) {
+            comTab[i] = new Employe();
+            comTab[i].setMatricule("C0000" + i);
+            comTab[i].setPerformance(2 + 4*i); // perf variable
+            employeRepository.save(comTab[i]);
+        }
+
+        // when
+        Double moyenne = employeRepository.avgPerformanceWhereMatriculeStartsWith("C");
+
+        // then
+        Assertions.assertThat(moyenne).isEqualTo(6);
     }
 
     /**
