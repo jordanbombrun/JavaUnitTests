@@ -105,6 +105,42 @@ public class EmployeServiceTest {
         ArgumentCaptor<Employe> employeArgumentCaptor = ArgumentCaptor.forClass(Employe.class);
         Mockito.verify(employeRepository, Mockito.times(1)).save(employeArgumentCaptor.capture());
         Employe employe = employeArgumentCaptor.getValue();
-        Assertions.assertThat(employe.getPerformance()).isEqualTo(Entreprise.PERFORMANCE_BASE+1);
+        Assertions.assertThat(employe.getPerformance()).isEqualTo(Entreprise.PERFORMANCE_BASE + 1);
+    }
+
+    /**
+     * Cas 2 : CA inférieur entre 20% et 5% par rapport à l'ojectif, il perd 2 de performance
+     */
+    @Test
+    public void testCalculPerformanceCommercialCas2() {
+        // given
+        /*Employe[] comTabBestPerf = new Employe[3];
+        for (int i = 0; i < 3; i++) {
+            comTabBestPerf[i] = new Employe();
+            comTabBestPerf[i].setMatricule("C0000" + i);
+            comTabBestPerf[i].setPerformance(99);
+            Mockito.when(employeRepository.findByMatricule("C0000" + i)).thenReturn(comTabBestPerf[i]);
+        }*/
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(50.0);
+        Employe emp = new Employe();
+        emp.setMatricule("C00009");
+        emp.setPerformance(10); // doit être égale à 8
+        Mockito.when(employeRepository.findByMatricule("C00009")).thenReturn(emp);
+        String matricule = "C00009";
+        Long caTraite = 90000L;
+        Long objectifCa = 100000L;
+
+        // when
+        try {
+            employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
+        } catch (EmployeException e) {
+            System.out.println("########### ERREUR ###########");
+        }
+
+        // then
+        ArgumentCaptor<Employe> employeArgumentCaptor = ArgumentCaptor.forClass(Employe.class);
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeArgumentCaptor.capture());
+        Employe employe = employeArgumentCaptor.getValue();
+        Assertions.assertThat(employe.getPerformance()).isEqualTo(8);
     }
 }
