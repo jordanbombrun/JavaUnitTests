@@ -87,14 +87,21 @@ public class EmployeServiceTest {
      * Cas 1 : le commercial retombe à la performance de base ( +1 pour performance moyenne )
      * Cas 2 : CA inférieur entre 20% et 5% par rapport à l'ojectif, il perd 2 de performance
      * Cas 3 : Si le chiffre d'affaire est entre -5% et +5% de l'objectif fixé, la performance reste la même.
+     * Cas 4 : Si le chiffre d'affaire est supérieur entre 5 et 20%, il gagne 1 de performance
+     * Cas 5 : Si le chiffre d'affaire est supérieur de plus de 20%, il gagne 4 de performance
+     * Cas 6 : Perf supèrieure à la moyenne : perf + 1
      */
     @ParameterizedTest
     @CsvSource({
             "100000, 200000, 20, 1",
             "90000, 100000, 10, 8",
-            "100000 , 100000, 10, 10"
+            "100000 , 100000, 10, 10",
+            "100000, 90000, 8, 9",
+            "200000, 100000, 5, 9",
+            "100000 , 100000, 60, 61"
+
     })
-    public void testCalculPerformanceCommercialCas3 (
+    public void testCalculPerformanceCommercialParametre (
             Long caTraite, Long objectifCa, Integer intialPerf, Integer finalPerf
     ) throws EmployeException {
         // given
