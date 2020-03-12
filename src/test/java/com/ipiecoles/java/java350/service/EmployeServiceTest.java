@@ -9,6 +9,8 @@ import com.ipiecoles.java.java350.repository.EmployeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -81,66 +83,36 @@ public class EmployeServiceTest {
     }
 
     /**
+     * Les cas de tests sont dans l'ordre du csv ( cas 1, cas 2 ... cas 5)
      * Cas 1 : le commercial retombe à la performance de base ( +1 pour performance moyenne )
-     */
-    @Test
-    public void testCalculPerformanceCommercialCas1() {
-        // given
-        Employe emp = new Employe();
-        emp.setMatricule("C00001");
-        emp.setPerformance(10);
-        Mockito.when(employeRepository.findByMatricule("C00001")).thenReturn(emp);
-        String matricule = "C00001";
-        Long caTraite = 100000L;
-        Long objectifCa = 200000L;
-
-        // when
-        try {
-            employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
-        } catch (EmployeException e) {
-            System.out.println("########### ERREUR ###########");
-        }
-
-        // then
-        ArgumentCaptor<Employe> employeArgumentCaptor = ArgumentCaptor.forClass(Employe.class);
-        Mockito.verify(employeRepository, Mockito.times(1)).save(employeArgumentCaptor.capture());
-        Employe employe = employeArgumentCaptor.getValue();
-        Assertions.assertThat(employe.getPerformance()).isEqualTo(Entreprise.PERFORMANCE_BASE + 1);
-    }
-
-    /**
      * Cas 2 : CA inférieur entre 20% et 5% par rapport à l'ojectif, il perd 2 de performance
+     * Cas 3 : Si le chiffre d'affaire est entre -5% et +5% de l'objectif fixé, la performance reste la même.
      */
-    @Test
-    public void testCalculPerformanceCommercialCas2() {
+    @ParameterizedTest
+    @CsvSource({
+            "100000, 200000, 20, 1",
+            "90000, 100000, 10, 8",
+            "100000 , 100000, 10, 10"
+    })
+    public void testCalculPerformanceCommercialCas3 (
+            Long caTraite, Long objectifCa, Integer intialPerf, Integer finalPerf
+    ) throws EmployeException {
         // given
-        /*Employe[] comTabBestPerf = new Employe[3];
-        for (int i = 0; i < 3; i++) {
-            comTabBestPerf[i] = new Employe();
-            comTabBestPerf[i].setMatricule("C0000" + i);
-            comTabBestPerf[i].setPerformance(99);
-            Mockito.when(employeRepository.findByMatricule("C0000" + i)).thenReturn(comTabBestPerf[i]);
-        }*/
         Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(50.0);
         Employe emp = new Employe();
-        emp.setMatricule("C00009");
-        emp.setPerformance(10); // doit être égale à 8
-        Mockito.when(employeRepository.findByMatricule("C00009")).thenReturn(emp);
         String matricule = "C00009";
-        Long caTraite = 90000L;
-        Long objectifCa = 100000L;
+        emp.setMatricule(matricule);
+        emp.setPerformance(intialPerf);
+        Mockito.when(employeRepository.findByMatricule("C00009")).thenReturn(emp);
 
         // when
-        try {
-            employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
-        } catch (EmployeException e) {
-            System.out.println("########### ERREUR ###########");
-        }
+        employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
 
         // then
         ArgumentCaptor<Employe> employeArgumentCaptor = ArgumentCaptor.forClass(Employe.class);
         Mockito.verify(employeRepository, Mockito.times(1)).save(employeArgumentCaptor.capture());
         Employe employe = employeArgumentCaptor.getValue();
-        Assertions.assertThat(employe.getPerformance()).isEqualTo(8);
+        Assertions.assertThat(employe.getPerformance()).isEqualTo(finalPerf);
     }
+
 }
