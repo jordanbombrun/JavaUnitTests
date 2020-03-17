@@ -1,14 +1,12 @@
 package com.ipiecoles.java.java350.repository;
 
 import com.ipiecoles.java.java350.model.Employe;
-import com.ipiecoles.java.java350.repository.EmployeRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Array;
 import java.time.LocalDate;
 
 @SpringBootTest

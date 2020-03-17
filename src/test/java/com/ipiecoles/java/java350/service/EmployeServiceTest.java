@@ -62,7 +62,7 @@ public class EmployeServiceTest {
     }
 
     @Test
-    public void testEmbaucheEmployeLimiteMatricule() throws EmployeException {
+    public void testEmbaucheEmployeLimiteMatricule() {
         // given
         String nom = "Doe";
         String prenom = "John";
@@ -129,14 +129,13 @@ public class EmployeServiceTest {
      */
     @ParameterizedTest
     @CsvSource({
-            "-100000, 100000, 10, 'C00001'",
-            "'100000', -100000, 10, 'C00001'",
-            "100000, 100000, 10, 'T00001'"
+            "-100000, 100000, 'C00001'",
+            "'100000', -100000, 'C00001'",
+            "100000, 100000, 'T00001'"
     })
     public void testCalculPerformanceCommercialBadMatricule(
-            Long caTraite, Long objectifCa, Integer intialPerf, String matricule
+            Long caTraite, Long objectifCa, String matricule
     ) {
-
         // given - when
         try {
             employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
