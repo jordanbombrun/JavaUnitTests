@@ -101,7 +101,7 @@ public class EmployeServiceTest {
             "100000, 100000, 60, 61"
 
     })
-    public void testCalculPerformanceCommercialParametre (
+    public void testCalculPerformanceCommercialParametre(
             Long caTraite, Long objectifCa, Integer intialPerf, Integer finalPerf
     ) throws EmployeException {
         // given
@@ -133,24 +133,30 @@ public class EmployeServiceTest {
             "'100000', -100000, 10, 'C00001'",
             "100000, 100000, 10, 'T00001'"
     })
-    public void testCalculPerformanceCommercialBadMatricule (
+    public void testCalculPerformanceCommercialBadMatricule(
             Long caTraite, Long objectifCa, Integer intialPerf, String matricule
     ) {
-        // given
-        Employe emp = new Employe();
-        emp.setMatricule(matricule);
-        emp.setPerformance(intialPerf);
-        Mockito.when(employeRepository.findByMatricule("C00001")).thenReturn(emp);
-/*
-        Mockito.when(employeRepository.findByMatricule(matricule)).thenReturn(emp);
 
-        // when
+        // given - when
         try {
             employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
         } catch (Exception e) {
             // then
             Assertions.assertThat(e).isInstanceOf(EmployeException.class);
         }
- */
+    }
+
+    /**
+     * Cas 10 : Recherche de l'employé dans la base quand Emp == null
+     */
+    @Test
+    public void testCalculPerformanceCommercialEmpIsNull() {
+        // given - when
+        try {
+            employeService.calculPerformanceCommercial("C99999", 0L, 0L);
+        } catch (Exception e) {
+            // then
+            Assertions.assertThat(e).isInstanceOf(EmployeException.class);
+        }
     }
 }
