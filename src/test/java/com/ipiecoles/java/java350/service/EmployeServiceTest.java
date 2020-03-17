@@ -98,7 +98,7 @@ public class EmployeServiceTest {
             "100000 , 100000, 10, 10",
             "100000, 90000, 8, 9",
             "200000, 100000, 5, 9",
-            "100000 , 100000, 60, 61"
+            "100000, 100000, 60, 61"
 
     })
     public void testCalculPerformanceCommercialParametre (
@@ -122,4 +122,35 @@ public class EmployeServiceTest {
         Assertions.assertThat(employe.getPerformance()).isEqualTo(finalPerf);
     }
 
+    /**
+     * Cas 7 : caTraite négatif
+     * Cas 8 : objectifCa négatif
+     * Cas 9 : matricule ne commence pas la lettre "C"
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "-100000, 100000, 10, 'C00001'",
+            "'100000', -100000, 10, 'C00001'",
+            "100000, 100000, 10, 'T00001'"
+    })
+    public void testCalculPerformanceCommercialBadMatricule (
+            Long caTraite, Long objectifCa, Integer intialPerf, String matricule
+    ) {
+        // given
+        Employe emp = new Employe();
+        emp.setMatricule(matricule);
+        emp.setPerformance(intialPerf);
+        Mockito.when(employeRepository.findByMatricule("C00001")).thenReturn(emp);
+/*
+        Mockito.when(employeRepository.findByMatricule(matricule)).thenReturn(emp);
+
+        // when
+        try {
+            employeService.calculPerformanceCommercial(matricule, caTraite, objectifCa);
+        } catch (Exception e) {
+            // then
+            Assertions.assertThat(e).isInstanceOf(EmployeException.class);
+        }
+ */
+    }
 }
