@@ -68,6 +68,7 @@ public class Employe {
             case FRIDAY:
                 if (d.isLeapYear()) var = var + 2;
                 else var = var + 1;
+                break;
             case SATURDAY:
                 var = var + 1;
                 break;
@@ -110,7 +111,14 @@ public class Employe {
     }
 
     //Augmenter salaire
-    //public void augmenterSalaire(double pourcentage){}
+    public void augmenterSalaire(double pourcentage) {
+        if (pourcentage <= 0) {
+            pourcentage = 0;
+        } else if (pourcentage > 10) {
+            pourcentage = 10.0;
+        }
+        setSalaire(getSalaire() + getSalaire() * pourcentage);
+    }
 
     public Long getId() {
         return id;

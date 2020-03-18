@@ -1,6 +1,5 @@
 package com.ipiecoles.java.java350.model;
 
-import com.ipiecoles.java.java350.model.Employe;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -90,5 +89,38 @@ public class EmployeTest {
         emp.setPerformance(perf);
         //When , Then
         Assertions.assertThat(emp.getPrimeAnnuelle()).isEqualTo(primeAnnuelle);
+    }
+
+
+    /**
+     * Limites de tests :
+     * - pourcentage négatif => aucune modification de salaire
+     * - pourcentage strictement entre 0 et 10 => augmentation acceptée
+     * - pourcentage supèrieur à 10 => augmentation limitée à 10 (pour éviter les erreurs de saisies)
+     *
+     * @param salaire
+     * @param pourcentage
+     * @param salaireCalcule
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "1500 ,-0.5, 1500",
+            "1500 , 1.0, 3000",
+            "1500 , 15.0, 16500"
+    })
+    public void testAugmenterSalaire(
+            Double salaire,
+            double pourcentage,
+            Double salaireCalcule
+    ) {
+        // given
+        Employe emp = new Employe();
+        emp.setSalaire(salaire);
+
+        // when
+        emp.augmenterSalaire(pourcentage);
+
+        // then
+        Assertions.assertThat(emp.getSalaire()).isEqualTo(salaireCalcule);
     }
 }
