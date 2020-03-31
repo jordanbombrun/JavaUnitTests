@@ -9,5 +9,6 @@ public class Java350Application {
     public static void main(String[] args) {
         SpringApplication.run(Java350Application.class, args);
     }
+    
 
 }
